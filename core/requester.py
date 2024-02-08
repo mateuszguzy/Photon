@@ -1,5 +1,6 @@
 import random
 import time
+from collections import defaultdict
 
 import requests
 from requests.exceptions import TooManyRedirects
@@ -44,10 +45,15 @@ def requester(
             'DNT': '1',
             'Connection': 'close',
         }
+        fixed_cookies = defaultdict(str)
+        cookies_list = cook.split("&")
+        for cookie in cookies_list:
+            key, value = cookie.split("=")
+            fixed_cookies[key] = value
         try:
             response = SESSION.get(
                 url,
-                cookies=cook,
+                cookies=fixed_cookies,
                 headers=final_headers,
                 verify=False,
                 timeout=timeout,
